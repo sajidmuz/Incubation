@@ -13,6 +13,20 @@ Consider all possible test cases
 
 //Code
 
+/*
+  Schema
+  -------
+    Input file := x y
+                  1 2
+                  3 4
+     Here x and y are co-ordinates
+     
+    Output filr := Distance   Co-ordinates
+                   5            3 4
+                   13           12 5
+*/
+
+
 
 #include<iostream>
 #include<cstdlib>
