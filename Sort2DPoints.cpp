@@ -37,6 +37,7 @@ Consider all possible test cases
 #include<cmath>
 #include<iomanip>
 #include<map>
+#include<vector>
 using namespace std;
 
 
@@ -46,7 +47,7 @@ int main()
     string outputFile;
     fstream inputFileStream;
     fstream outputFileStream;
-    map<double, string> mp;
+    map<double, vector<string>> mp;
 
     cout << "Enter file path to read " << endl;
     cin >> inputFile;
@@ -58,21 +59,27 @@ int main()
     //Read file and put 2DPoints in a map
     inputFileStream.open(inputFile, ios::in);
     if(inputFileStream.is_open()){
-        string line;
-        string word;
+        string line;        // Store one line at one iteration
+        string word;        // Store one co-ordinate at one iteraton
+        string distTostr;   // Store distance in string form 
 
-        double x = -1; // X Co-ordiate
-        double y = 0;  // Y Co-ordinate
-        double dist = 0;  // Distance from origin to point
+        double x = -1;      // X Co-ordiate
+        double y = 0;       // Y Co-ordinate
+        double dist = 0;    // Distance from origin to point
         
         while (getline(inputFileStream, line)){             // Fetch one line at a time
             stringstream ss(line);
             while (ss >> word){                             //Split lines into words 
-                x == -1 ? x = stoi(word) : y = stoi(word);  // Put those words in X and Y variable
+                x == -1 ? x = stod(word) : y = stoi(word);  // Put those words in X and Y variable
             }
+    
             dist = sqrt(pow(x, 2) + pow(y, 2));             //Find distance b/w origin and points
             x=-1;                                           // For next iteration reset value of x
-            mp.insert({dist,line});                         // Insert Didtance and line in map
+            distTostr = to_string(dist); 
+            vector<string> res {distTostr,line};            //Put distance and points in vector
+            auto i = mp.find(dist);                         // Check key value for uniqueness
+            i == mp.end() ? mp.insert({dist, res}) : mp.insert({dist+0.001, res});
+                                                        // Insert Didtance and line in map
         }
         inputFileStream.close();
     }
@@ -81,9 +88,11 @@ int main()
     //Write sorted data in a output file
     outputFileStream.open(outputFile, ios::out);
     if(outputFileStream.is_open()){
-        map<double, string>::iterator itr;
+        map<double, vector<string>>::iterator itr;
+        outputFileStream << "Distance" <<"\t\t"<< "Points" << endl;
+        outputFileStream << "--------" <<"\t\t"<< "------" << endl << endl;
         for(itr=mp.begin(); itr!=mp.end(); ++itr){
-            outputFileStream << itr->first <<"\t\t"<<itr->second<<endl;
+            outputFileStream << itr->second[0] <<"\t\t" << itr->second[1] <<endl;
         }
         outputFileStream.close();
     }
