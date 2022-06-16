@@ -100,7 +100,7 @@ private:
         }
     }
 
-    public:
+public:
 
     Sort2DPoints(){}
     void getSorted2Points(string inputFile, string outputFile)
